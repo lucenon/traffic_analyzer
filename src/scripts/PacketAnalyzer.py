@@ -1,3 +1,4 @@
+from scapy.all import sniff, rdpcap
 from scapy.layers.inet import IP
 from scapy.utils import checksum
 from src.scripts import predict, config
@@ -8,7 +9,7 @@ from datetime import datetime
 
 
 class PacketAnalyzer:
-    def __init__(self, mode, model, duration=10, file_path=None, file_record_path=config.FILE_RECORD):
+    def __init__(self, mode, model, duration, file_path=None, file_record_path=config.FILE_RECORD):
         self.__duration = duration
         self.mode = mode
         self.file_path = file_path
@@ -128,8 +129,8 @@ class PacketAnalyzer:
         print("Stopping packet capture...")
         self.running = False
 
-    def capture(self, duration):
+    def capture(self):
         while self.running:
-            print(f"Capturing packets for the next {duration} seconds...")
-            packets = sniff(timeout=duration)
+            print(f"Capturing packets for the next {self.duration} seconds...")
+            packets = sniff(timeout=self.duration)
             self.analyze(packets)
